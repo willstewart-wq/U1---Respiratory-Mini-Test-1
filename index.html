@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Respiratory System Online Test (Q3, Q5, Q10, Q16)</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+            --success: #16a34a;
+            --warning: #d97706;
+            --error: #dc2626;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #0f172a;
+            font-size: 1.6rem;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .user-info label {
+            font-weight: 600;
+        }
+
+        .user-info input[type="text"] {
+            flex-grow: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.secondary {
+            background-color: #64748b;
+        }
+
+        button.secondary:hover {
+            background-color: #475569;
+        }
+
+        button.success {
+            background-color: var(--success);
+        }
+
+        button.success:hover {
+            background-color: #15803d;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .question-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0f172a;
+        }
+
+        .marks-badge {
+            background: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .scenario {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 110px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: 2px solid var(--primary);
+            border-color: transparent;
+        }
+
+        .status-tag {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 6px;
+            color: #64748b;
+        }
+
+        .feedback-box {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.marked {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .feedback-score {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .model-answer {
+            background: #ffffff;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        #overall-results {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>PE Respiratory System - Interactive Assessment</h1>
+        <p style="margin: 0; color: #64748b; font-size: 0.95rem;">
+            Answer questions 3, 5, 10, and 16. Your progress auto-saves as you type.
+        </p>
+        <div class="user-info">
+            <label for="student-name">Student Name:</label>
+            <input type="text" id="student-name" placeholder="Enter your full name here..." oninput="autoSave()">
+        </div>
+    </header>
+
+    <div class="actions-bar">
+        <button class="success" onclick="markTest()">Mark Attempted Questions</button>
+        <button class="secondary" onclick="exportJSON()">Save / Download Progress Data</button>
+        <button class="secondary" onclick="importJSON()">Load Saved Progress</button>
+        <button onclick="downloadDoc()">Download as Google Doc (.doc)</button>
+        <input type="file" id="file-input" style="display:none;" onchange="loadJSONFile(event)">
+    </div>
+
+    <div id="overall-results">
+        <h3 style="margin-top:0; color:#1e40af;">Assessment Results</h3>
+        <p id="summary-text" style="margin-bottom:0; font-weight:600;"></p>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="question-card" id="card-q3">
+        <div class="question-header">
+            <div class="question-title">Question 3</div>
+            <div class="marks-badge">2 Marks</div>
+        </div>
+        <div class="scenario">
+            Kevin plays rugby competitively. As part of his training, Kevin spends 3 hours a week weightlifting to increase muscular strength. Every Tuesday, Kevin attends rugby training. Before training, he completes a warm-up consisting of three phases: pulse raisers, static stretching exercises, and rugby-specific drills.
+        </div>
+        <label><strong>Describe how Kevin's minute volume (VE) could change between the three phases of his warm-up.</strong></label>
+        <textarea id="q3" oninput="autoSave()" placeholder="Type your answer here..."></textarea>
+        <div class="status-tag" id="status-q3">Status: Not attempted</div>
+        <div class="feedback-box" id="fb-q3"></div>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="question-card" id="card-q5">
+        <div class="question-header">
+            <div class="question-title">Question 5</div>
+            <div class="marks-badge">4 Marks</div>
+        </div>
+        <div class="scenario">
+            Zelda is 60 years old and does little exercise. The levels of oestrogen produced by Zelda's body have decreased as she has got older. Zelda joins a running club. Each time Zelda runs she notices an increase in her breathing rate as soon as she starts to exercise.
+        </div>
+        <label><strong>Describe the chemical and neural control of breathing rate.</strong></label>
+        <textarea id="q5" oninput="autoSave()" placeholder="Type your answer here..."></textarea>
+        <div class="status-tag" id="status-q5">Status: Not attempted</div>
+        <div class="feedback-box" id="fb-q5"></div>
+    </div>
+
+    <!-- Question 10 -->
+    <div class="question-card" id="card-q10">
+        <div class="question-header">
+            <div class="question-title">Question 10</div>
+            <div class="marks-badge">2 Marks</div>
+        </div>
+        <div class="scenario">
+            Beth wants to increase her fitness so she joins a fitness class at her local leisure centre. The class is split into 10 minutes warming up, 40 minutes continuous exercise, and 10 minutes cooling down. To maintain aerobic energy production, Beth needs a good supply of oxygen during the 40 minutes of continuous exercise. When Beth begins to exercise, her minute volume (VE) changes.
+        </div>
+        <label><strong>Explain why minute volume (VE) changes when Beth begins to exercise.</strong></label>
+        <textarea id="q10" oninput="autoSave()" placeholder="Type your answer here..."></textarea>
+        <div class="status-tag" id="status-q10">Status: Not attempted</div>
+        <div class="feedback-box" id="fb-q10"></div>
+    </div>
+
+    <!-- Question 16(i) -->
+    <div class="question-card" id="card-q16i">
+        <div class="question-header">
+            <div class="question-title">Question 16 (i)</div>
+            <div class="marks-badge">1 Mark</div>
+        </div>
+        <div class="scenario">
+            Beth wants to increase her fitness so she joins a fitness class. Breathing rate is controlled by two mechanisms. One mechanism is chemical.
+        </div>
+        <label><strong>State the other mechanism that controls breathing rate.</strong></label>
+        <textarea id="q16i" style="height: 60px;" oninput="autoSave()" placeholder="Type your answer here..."></textarea>
+        <div class="status-tag" id="status-q16i">Status: Not attempted</div>
+        <div class="feedback-box" id="fb-q16i"></div>
+    </div>
+
+    <!-- Question 16(ii) -->
+    <div class="question-card" id="card-q16ii">
+        <div class="question-header">
+            <div class="question-title">Question 16 (ii)</div>
+            <div class="marks-badge">3 Marks</div>
+        </div>
+        <div class="scenario">
+            Beth wants to increase her fitness so she joins a fitness class.
+        </div>
+        <label><strong>Describe how Beth's breathing rate is controlled by chemical mechanisms so she receives the oxygen required during her fitness class.</strong></label>
+        <textarea id="q16ii" oninput="autoSave()" placeholder="Type your answer here..."></textarea>
+        <div class="status-tag" id="status-q16ii">Status: Not attempted</div>
+        <div class="feedback-box" id="fb-q16ii"></div>
+    </div>
+</div>
+
+<script>
+    // --- Levenshtein Distance Algorithm for Fuzzy Spelling Matching ---
+    function levenshteinDistance(a, b) {
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+
+    // Helper: Checks if text contains target word/phrase or a close spelling match
+    function hasFuzzyMatch(text, target, maxDistance = 2) {
+        const normalizedText = text.toLowerCase().replace(/[^\w\s]/g, '');
+        const targetLower = target.toLowerCase();
+        
+        // Direct phrase check first
+        if (normalizedText.includes(targetLower)) return true;
+
+        // Split text into words and check individual word distance if target is a single word
+        const words = normalizedText.split(/\s+/);
+        if (!targetLower.includes(' ')) {
+            return words.some(w => {
+                if (Math.abs(w.length - targetLower.length) > maxDistance) return false;
+                return levenshteinDistance(w, targetLower) <= maxDistance;
+            });
+        }
+        return false;
+    }
+
+    // --- Auto Save & Load (localStorage) ---
+    const fields = ['student-name', 'q3', 'q5', 'q10', 'q16i', 'q16ii'];
+
+    function autoSave() {
+        const data = {};
+        fields.forEach(id => {
+            data[id] = document.getElementById(id).value;
+            updateStatusTag(id);
+        });
+        localStorage.setItem('respiratory_test_data', JSON.stringify(data));
+    }
+
+    function updateStatusTag(id) {
+        if (id === 'student-name') return;
+        const val = document.getElementById(id).value.trim();
+        const tag = document.getElementById('status-' + id);
+        if (val.length >= 5) {
+            tag.innerText = "Status: Attempted";
+            tag.style.color = "#16a34a";
+        } else {
+            tag.innerText = "Status: Not attempted";
+            tag.style.color = "#64748b";
+        }
+    }
+
+    function loadSavedData() {
+        const saved = localStorage.getItem('respiratory_test_data');
+        if (saved) {
+            const data = JSON.parse(saved);
+            fields.forEach(id => {
+                if (data[id] !== undefined) {
+                    document.getElementById(id).value = data[id];
+                    updateStatusTag(id);
+                }
+            });
+        }
+    }
+
+    // --- JSON Export / Import ---
+    function exportJSON() {
+        const data = {};
+        fields.forEach(id => data[id] = document.getElementById(id).value);
+        const name = (document.getElementById('student-name').value.trim() || 'Student').replace(/\s+/g, '_');
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Respiratory_Test_${name}.json`;
+        a.click();
+    }
+
+    function importJSON() {
+        document.getElementById('file-input').click();
+    }
+
+    function loadJSONFile(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            try {
+                const data = JSON.parse(evt.target.result);
+                fields.forEach(id => {
+                    if (data[id] !== undefined) {
+                        document.getElementById(id).value = data[id];
+                        updateStatusTag(id);
+                    }
+                });
+                autoSave();
+                alert('Progress loaded successfully!');
+            } catch (err) {
+                alert('Error loading JSON file.');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // --- Google Doc Export (.doc / HTML blob compatible with Drive) ---
+    function downloadDoc() {
+        const name = document.getElementById('student-name').value.trim() || 'Student';
+        let docContent = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+            <head><title>Respiratory System Test</title></head>
+            <body style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>Respiratory System Assessment Submission</h2>
+            <p><strong>Student Name:</strong> ${name}</p>
+            <hr />
+        `;
+
+        const qData = [
+            { id: 'q3', num: 'Q3', text: 'Describe how Kevin\'s minute volume (VE) could change between the three phases of his warm-up.' },
+            { id: 'q5', num: 'Q5', text: 'Describe the chemical and neural control of breathing rate.' },
+            { id: 'q10', num: 'Q10', text: 'Explain why minute volume (VE) changes when Beth begins to exercise.' },
+            { id: 'q16i', num: 'Q16 (i)', text: 'State the other mechanism that controls breathing rate.' },
+            { id: 'q16ii', num: 'Q16 (ii)', text: 'Describe how Beth\'s breathing rate is controlled by chemical mechanisms so she receives the oxygen required during her fitness class.' }
+        ];
+
+        qData.forEach(q => {
+            const ans = document.getElementById(q.id).value.trim();
+            docContent += `
+                <h3>${q.num}: ${q.text}</h3>
+                <p><strong>Student Response:</strong></p>
+                <p style="background:#f1f5f9; padding:10px;">${ans ? ans.replace(/\n/g, '<br>') : '<em>No answer provided</em>'}</p>
+                <br/>
+            `;
+        });
+
+        docContent += `</body></html>`;
+
+        const blob = new Blob(['\ufeff' + docContent], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${name.replace(/\s+/g, '_')}_Respiratory_Test.doc`;
+        a.click();
+    }
+
+    // --- Automated Marking & Model Answer Logic ---
+    function markTest() {
+        let totalScored = 0;
+        let totalPossibleAttempted = 0;
+        let attemptedCount = 0;
+
+        // Q3 (2 Marks)
+        const ansQ3 = document.getElementById('q3').value.trim();
+        const fbQ3 = document.getElementById('fb-q3');
+        if (ansQ3.length >= 5) {
+            attemptedCount++;
+            let score = 0;
+            let notes = [];
+            // Mark 1: Minute volume drops during static stretching
+            if ((hasFuzzyMatch(ansQ3, 'drop') || hasFuzzyMatch(ansQ3, 'decrease') || hasFuzzyMatch(ansQ3, 'lower') || hasFuzzyMatch(ansQ3, 'fall')) && 
+                (hasFuzzyMatch(ansQ3, 'static') || hasFuzzyMatch(ansQ3, 'stretch'))) {
+                score++;
+                notes.push("✓ Correctly identified that minute volume drops/decreases during static stretching.");
+            }
+            // Mark 2: Minute volume increases during rugby specific drills / pulse raiser
+            if ((hasFuzzyMatch(ansQ3, 'increase') || hasFuzzyMatch(ansQ3, 'rise') || hasFuzzyMatch(ansQ3, 'go up')) && 
+                (hasFuzzyMatch(ansQ3, 'drill') || hasFuzzyMatch(ansQ3, 'rugby') || hasFuzzyMatch(ansQ3, 'specific') || hasFuzzyMatch(ansQ3, 'pulse'))) {
+                score++;
+                notes.push("✓ Correctly identified that minute volume increases during rugby-specific drills.");
+            }
+
+            totalScored += score;
+            totalPossibleAttempted += 2;
+            renderFeedback(fbQ3, score, 2, notes, 
+                "Minute volume will drop/decrease during static stretching exercises (1 mark), but will increase as Kevin moves on to the rugby-specific drills (1 mark)."
+            );
+        } else {
+            fbQ3.classList.remove('show');
+        }
+
+        // Q5 (4 Marks)
+        const ansQ5 = document.getElementById('q5').value.trim();
+        const fbQ5 = document.getElementById('fb-q5');
+        if (ansQ5.length >= 5) {
+            attemptedCount++;
+            let score = 0;
+            let notes = [];
+
+            // Point 1: Chemoreceptors
+            if (hasFuzzyMatch(ansQ5, 'chemoreceptor') || hasFuzzyMatch(ansQ5, 'chemoreceptos') || hasFuzzyMatch(ansQ5, 'chemical receptor')) {
+                score++;
+                notes.push("✓ Identified chemoreceptors.");
+            }
+            // Point 2: Detect CO2 change / acidity / blood pH
+            if (hasFuzzyMatch(ansQ5, 'ph') || hasFuzzyMatch(ansQ5, 'acid') || hasFuzzyMatch(ansQ5, 'acidity') || hasFuzzyMatch(ansQ5, 'carbon dioxide') || hasFuzzyMatch(ansQ5, 'co2')) {
+                score++;
+                notes.push("✓ Mentioned detection of changes in CO2 / blood pH / acidity.");
+            }
+            // Point 3: Signal Medulla Oblongata / Respiratory Control Centre (RCC)
+            if (hasFuzzyMatch(ansQ5, 'medulla') || hasFuzzyMatch(ansQ5, 'oblongata') || hasFuzzyMatch(ansQ5, 'rcc') || hasFuzzyMatch(ansQ5, 'respiratory control centre') || hasFuzzyMatch(ansQ5, 'brain')) {
+                score++;
+                notes.push("✓ Referenced sending signals to the medulla oblongata / RCC in the brain.");
+            }
+            // Point 4: Increase breathing rate
+            if (hasFuzzyMatch(ansQ5, 'breathing rate') || hasFuzzyMatch(ansQ5, 'increase breathing') || hasFuzzyMatch(ansQ5, 'ventilation')) {
+                score++;
+                notes.push("✓ Stated signal to increase breathing rate.");
+            }
+
+            score = Math.min(4, score);
+            totalScored += score;
+            totalPossibleAttempted += 4;
+            renderFeedback(fbQ5, score, 4, notes,
+                "Chemoreceptors (1 mark) detect a change in CO2 levels / blood pH / acidity (1 mark), which signal the medulla oblongata / respiratory control centre in the brain (1 mark) to increase breathing rate when high levels of CO2 are detected (1 mark)."
+            );
+        } else {
+            fbQ5.classList.remove('show');
+        }
+
+        // Q10 (2 Marks)
+        const ansQ10 = document.getElementById('q10').value.trim();
+        const fbQ10 = document.getElementById('fb-q10');
+        if (ansQ10.length >= 5) {
+            attemptedCount++;
+            let score = 0;
+            let notes = [];
+
+            // Point 1: Need to breathe more / increase VE / increase rate or depth
+            if (hasFuzzyMatch(ansQ10, 'increase') || hasFuzzyMatch(ansQ10, 'more') || hasFuzzyMatch(ansQ10, 'deeper') || hasFuzzyMatch(ansQ10, 'faster')) {
+                score++;
+                notes.push("✓ Identified that minute volume / breathing rate / depth increases.");
+            }
+            // Point 2: Take in more oxygen / supply oxygen demands / remove CO2
+            if (hasFuzzyMatch(ansQ10, 'oxygen') || hasFuzzyMatch(ansQ10, 'o2') || hasFuzzyMatch(ansQ10, 'co2') || hasFuzzyMatch(ansQ10, 'demand')) {
+                score++;
+                notes.push("✓ Explained requirement to deliver more oxygen / meet exercise demand / remove CO2.");
+            }
+
+            totalScored += score;
+            totalPossibleAttempted += 2;
+            renderFeedback(fbQ10, score, 2, notes,
+                "Minute volume increases because breathing rate/depth increases (1 mark) so that additional oxygen can be taken in and delivered to working muscles to meet exercise demands (1 mark)."
+            );
+        } else {
+            fbQ10.classList.remove('show');
+        }
+
+        // Q16(i) (1 Mark)
+        const ansQ16i = document.getElementById('q16i').value.trim();
+        const fbQ16i = document.getElementById('fb-q16i');
+        if (ansQ16i.length >= 2) {
+            attemptedCount++;
+            let score = 0;
+            let notes = [];
+
+            if (hasFuzzyMatch(ansQ16i, 'neural') || hasFuzzyMatch(ansQ16i, 'nervous') || hasFuzzyMatch(ansQ16i, 'neuro')) {
+                score = 1;
+                notes.push("✓ Correctly identified Neural / Nervous control.");
+            } else {
+                notes.push("✗ Incorrect mechanism named.");
+            }
+
+            totalScored += score;
+            totalPossibleAttempted += 1;
+            renderFeedback(fbQ16i, score, 1, notes, "Neural (or Nervous) control mechanism (1 mark).");
+        } else {
+            fbQ16i.classList.remove('show');
+        }
+
+        // Q16(ii) (3 Marks)
+        const ansQ16ii = document.getElementById('q16ii').value.trim();
+        const fbQ16ii = document.getElementById('fb-q16ii');
+        if (ansQ16ii.length >= 5) {
+            attemptedCount++;
+            let score = 0;
+            let notes = [];
+
+            // Point 1: CO2 increases / produced
+            if (hasFuzzyMatch(ansQ16ii, 'carbon dioxide') || hasFuzzyMatch(ansQ16ii, 'co2')) {
+                score++;
+                notes.push("✓ Identified increase in carbon dioxide (CO2).");
+            }
+            // Point 2: Blood pH decreases / acidity increases
+            if (hasFuzzyMatch(ansQ16ii, 'ph') || hasFuzzyMatch(ansQ16ii, 'acid') || hasFuzzyMatch(ansQ16ii, 'acidity')) {
+                score++;
+                notes.push("✓ Identified decrease in blood pH / increase in acidity.");
+            }
+            // Point 3: Chemoreceptors detect change
+            if (hasFuzzyMatch(ansQ16ii, 'chemoreceptor') || hasFuzzyMatch(ansQ16ii, 'chemoreceptos') || hasFuzzyMatch(ansQ16ii, 'detect')) {
+                score++;
+                notes.push("✓ Referenced detection by chemoreceptors (triggering increased breathing rate).");
+            }
+
+            score = Math.min(3, score);
+            totalScored += score;
+            totalPossibleAttempted += 3;
+            renderFeedback(fbQ16ii, score, 3, notes,
+                "When levels of carbon dioxide (CO2) increase during exercise (1 mark), blood pH decreases / blood acidity increases (1 mark), which is detected by chemoreceptors to signal an increase in breathing rate (1 mark)."
+            );
+        } else {
+            fbQ16ii.classList.remove('show');
+        }
+
+        // Overall Results Summary Display
+        const resBox = document.getElementById('overall-results');
+        const summary = document.getElementById('summary-text');
+        if (attemptedCount > 0) {
+            resBox.style.display = 'block';
+            summary.innerText = `You have completed ${attemptedCount} out of 5 question parts. Score for attempted questions: ${totalScored} / ${totalPossibleAttempted} marks.`;
+        } else {
+            resBox.style.display = 'block';
+            summary.innerText = "No questions have been attempted yet. Please fill in your answers before marking.";
+        }
+    }
+
+    function renderFeedback(container, score, maxMarks, notes, modelAnswer) {
+        container.innerHTML = `
+            <div class="feedback-score">Marks Awarded: ${score} / ${maxMarks}</div>
+            <ul style="margin: 0 0 10px 0; padding-left: 20px; font-size:0.9rem;">
+                ${notes.map(n => `<li>${n}</li>`).join('')}
+            </ul>
+            <div class="model-answer">
+                <strong>Model Answer / Key Mark Scheme Points:</strong><br/>
+                ${modelAnswer}
+            </div>
+        `;
+        container.className = "feedback-box show marked";
+    }
+
+    // Initialize page
+    window.onload = function() {
+        loadSavedData();
+    };
+</script>
+</body>
+</html>
